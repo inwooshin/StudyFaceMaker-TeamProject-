@@ -5,5 +5,6 @@ int main (void){
 
     return 0;
     //너무 힘드렁
+    //안힘들어!
 
 }
