@@ -1,4 +1,4 @@
-#ifndef
+#ifndef MYPROJECT
 #define MYPROJECT
 
 printMyName1();
