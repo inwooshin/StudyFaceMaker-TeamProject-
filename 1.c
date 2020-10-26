@@ -1,7 +1,7 @@
 #include "myProject.h"
 
 int printMyName1(){
-		printf("my name is 신인우\n");
+		printf("my name is [inwoo]\n");
 		
 		return 1;
 }
