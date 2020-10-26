@@ -1,10 +1,9 @@
 #include <stdio.h>
+#include "myProject.h"
 
 int main (void){
-    printf("Hello GitHub..!");
-
-    return 0;
-    //너무 힘드렁
-    //안힘들어!
-
+	
+	printf("Chief name is 신인우\n");
+	printMyName1();
+	printMyName2();
 }
