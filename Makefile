@@ -1,23 +1,8 @@
+all : ledtest
 
-all : final.elf
-	
-final.elf : libinout.so main.o myProject.h
-	gcc main.o -linout -L. -o final.elf
+ledtest : ledtest.c libMyperi.a
+	arm-linux-gnueabi-gcc -o ledtest ledtest.c -l MyPeri -L. 
 
-libinout.so : 1.o 2.o myProject.h
-	gcc 1.o 2.o -o libinout.so -shared -fPIC
-	
-1.o : 1.c myProject.h
-	gcc 1.c -c -o 1.o -shared -fPIC
-
-2.o : 2.c myProject.h
-	gcc 2.c -c -o 2.o -shared -fPIC
-
-main.o : main.c
-
-rm : 
-	rm *.o
-	rm *.elf
-	rm *.so
-
-
+libMyperi.a : led.h led.c
+	arm-linux-gnueabi-gcc -c led.c -o led.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o
