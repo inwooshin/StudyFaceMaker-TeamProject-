@@ -1,23 +1,15 @@
 
-all : final.elf
-	
-final.elf : libinout.so main.o myProject.h
-	gcc main.o -linout -L. -o final.elf
+all: buttontest
 
-libinout.so : 1.o 2.o myProject.h
-	gcc 1.o 2.o -o libinout.so -shared -fPIC
-	
-1.o : 1.c myProject.h
-	gcc 1.c -c -o 1.o -shared -fPIC
-
-2.o : 2.c myProject.h
-	Gcc 2.c -c -o 2.o -shared -fPIC
-
-main.o : main.c
+buttontest : buttontest.c libMyPeri.a button.h
+	arm-linux-gnueabi-gcc buttontest.c -l MyPeri -L. -o buttontest -lpthread
+libMyPeri.a : button.o led.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o
+button.o : button.h button.c
+	arm-linux-gnueabi-gcc -c button.c -lpthread -o button.o
+led.o: led.h led.c
+	arm-linux-gnueabi-gcc -c led.c -o led.o
 
 rm : 
 	rm *.o
-	rm *.elf
-	em *.so
-
-
+	rm libMyPeri.a
