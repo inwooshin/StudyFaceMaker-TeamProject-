@@ -1,7 +1,7 @@
 #ifndef MYPROJECT
 #define MYPROJECT
 
-printMyName1();
-printMyName2();
+int printMyName1(void);
+int printMyName2(void);
 
 #endif
