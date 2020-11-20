@@ -37,7 +37,6 @@ int ledLibInit(void){
 int ledLibExit(void)
 {
 	ledValue = 0;
-	ledOnOff (0, 0);
 
 	close(fd);
 
