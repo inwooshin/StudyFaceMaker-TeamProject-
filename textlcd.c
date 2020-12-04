@@ -6,7 +6,7 @@
 #include "textlcd.h"
 #define TEXTLCD_DRIVER_NAME "/dev/peritextlcd"
 
-int lcdtestwrite(const char *line , const char *string, int lineflag)
+int text(const char *str1 , const char *str2)
 {
 	unsigned int linenum = 0;
 	stTextLCD stlcd; // stTextLCD 구조체를 가지고 드라이버와 인터페이스
@@ -14,28 +14,14 @@ int lcdtestwrite(const char *line , const char *string, int lineflag)
 	int len;
 	memset(&stlcd,0,sizeof(stTextLCD)); // 구조체 초기화
 	
-	if (lineflag < 3 ) { // line 정보와 쓸 정보를 확인
-	perror(" Args number is less than 2\n");
-	return 1;
-	}
-	
-	linenum = strtol(line,NULL,10);
-	printf("linenum :%d\n", linenum);
-	
-	if ( linenum == 1)
 	stlcd.cmdData = CMD_DATA_WRITE_LINE_1;
-	else if ( linenum == 2)
-	stlcd.cmdData = CMD_DATA_WRITE_LINE_2;
-	else {
-	printf("linenum : %d wrong . range (1 ~ 2)\n", linenum);
-	return 1; }
 	
-	len = strlen(string);
+	len = strlen(str1);
 	
 	if ( len > COLUMN_NUM)
-	memcpy(stlcd.TextData[stlcd.cmdData - 1], string, COLUMN_NUM);
+	memcpy(stlcd.TextData[stlcd.cmdData - 1], str1, COLUMN_NUM);
 	else
-	memcpy(stlcd.TextData[stlcd.cmdData - 1], string, len);
+	memcpy(stlcd.TextData[stlcd.cmdData - 1], str1, len);
 	stlcd.cmd = CMD_WRITE_STRING;
 	fd = open(TEXTLCD_DRIVER_NAME,O_RDWR); // open driver
 	
@@ -44,7 +30,19 @@ int lcdtestwrite(const char *line , const char *string, int lineflag)
 	return 1;
 	}
 	
-	write(fd,&stlcd,sizeof(stTextLCD));
+	write(fd,&stlcd,sizeof(stTextLCD)); //첫째줄
+	
+	stlcd.cmdData = CMD_DATA_WRITE_LINE_2;
+	len = strlen(str2);
+	
+	if ( len > COLUMN_NUM)
+	memcpy(stlcd.TextData[stlcd.cmdData - 1], str2, COLUMN_NUM);
+	else
+	memcpy(stlcd.TextData[stlcd.cmdData - 1], str2, len);
+	stlcd.cmd = CMD_WRITE_STRING;
+	
+	write(fd,&stlcd,sizeof(stTextLCD)); //두번째 줄
+	
 	close(fd);
 	
 	return 0;

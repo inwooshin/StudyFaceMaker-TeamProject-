@@ -12,7 +12,6 @@
 #include "Temperature.h"
 
 int main(int argc, char **argv){
-char *buffer; int file;
 file=spi_init("/dev/spidev1.0"); //dev
 buffer=(char *)spi_read_lm74(file);
 close(file);

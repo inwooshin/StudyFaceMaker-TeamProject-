@@ -10,4 +10,5 @@ int pressed;
 } BUTTON_MSG_T;
 int buttonInit(void);
 int buttonExit(void);
+int buttonStart(void);
 #endif

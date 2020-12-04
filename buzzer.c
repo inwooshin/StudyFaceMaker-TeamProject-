@@ -35,7 +35,6 @@ int buzzerInit(void){
 	}
 	else return ifNotFound;
 	
-	printf("find %s\n",gBuzzerBaseSysDir);
 	
 	sprintf(EnablePath,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
 	sprintf(FrequencyPath,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
@@ -43,6 +42,7 @@ int buzzerInit(void){
 	fdEna=open(EnablePath,O_WRONLY);
 	fdFre=open(FrequencyPath,O_WRONLY);
 	write(fdEna, &"1", 1);
+	write(fdEna, &"0", 1);
 	
 	return ifNotFound;
 }

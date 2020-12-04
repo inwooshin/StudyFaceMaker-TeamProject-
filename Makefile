@@ -1,9 +1,14 @@
-all: Temperaturetest
+all: project
 
-Temperaturetest : libMyPeri.a Temperaturetest.c Temperature.h
-	arm-linux-gnueabi-gcc Temperaturetest.c -l MyPeri -L. -o Temperaturetest -lpthread
-libMyPeri.a : button.o led.o buzzer.o fnd.o ColorLed.o Temperature.o
-	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o fnd.o ColorLed.o Temperature.o
+project : libMyPeri.a Embe.c
+	arm-linux-gnueabi-gcc Embe.c  -l MyPeri -L. -o project -lpthread
+	scp ./project ecube@192.168.0.8:/home/ecube
+libMyPeri.a : button.o led.o buzzer.o fnd.o ColorLed.o Temperature.o acc.o textlcd.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o fnd.o ColorLed.o Temperature.o acc.o textlcd.o
+
+textlcd.o : textlcd.c textlcd.h
+	arm-linux-gnueabi-gcc -c textlcd.c -o textlcd.o
+
 fnd.o : fnd.c fnd.h
 	arm-linux-gnueabi-gcc -c fnd.c -o fnd.o
 buzzer.o : buzzer.h buzzer.c
@@ -16,6 +21,9 @@ ColorLed.o: ColorLed.h ColorLed.c
 	arm-linux-gnueabi-gcc -c ColorLed.c -o ColorLed.o
 Temperature.o: Temperature.h Temperature.c
 	arm-linux-gnueabi-gcc -c Temperature.c -o Temperature.o
-rm : 
+acc.o: acc.h accelMagGyro.c
+	arm-linux-gnueabi-gcc -c accelMagGyro.c -o acc.o
+
+clear : 
 	rm *.o
 	rm libMyPeri.a

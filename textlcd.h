@@ -30,7 +30,7 @@
 #define CMD_TEST_GPIO_LOW 0x31
 
 
-int lcdtestwrite(const char *str1 , const char *str2, int lineflag);
+int text(const char *str1 , const char *str2);
 
 typedef struct TextLCD_tag
 {

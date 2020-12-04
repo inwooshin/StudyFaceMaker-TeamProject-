@@ -28,14 +28,14 @@ int probeButtonPath(char *newPath){
 	fgets(tmpStr,200,fp); //최대 200자를 읽어봄
 	//printf ("%s",tmpStr);
 	if (strcmp(tmpStr,HAVE_TO_FIND_1) == 0){
-		printf("YES! I found!: %s\r\n", tmpStr);
+		//printf("YES! I found!: %s\r\n", tmpStr);
 		returnValue = 1; //찾음
 	}
 	
 	if ((returnValue == 1) && (strncasecmp(tmpStr, HAVE_TO_FIND_2, strlen(HAVE_TO_FIND_2)) == 0) )
 	{
-	printf ("-->%s",tmpStr);
-	printf("\t%c\r\n",tmpStr[strlen(tmpStr)-3]);
+	//printf ("-->%s",tmpStr);
+	//printf("\t%c\r\n",tmpStr[strlen(tmpStr)-3]);
 	number = tmpStr[strlen(tmpStr)-3] - '0';
 	//Ascii character '0'-'9' (0x30-0x39)
 	//to interger(0)
@@ -77,6 +77,11 @@ int buttonInit(void){
 	if (probeButtonPath(buttonPath) == 0)
 	return 0;
 	fd=open (buttonPath, O_RDONLY);
+	
+	return 1;
+}
+
+int buttonStart(void){
 	msgID = msgget (MESSAGE_ID, IPC_CREAT|0666);
 	if (msgID == -1){	
 		printf ("Cannot get msgQueueID, Return!\r\n");
@@ -84,7 +89,8 @@ int buttonInit(void){
 	}
 	A.messageNum = 1;
 	pthread_create(&buttonTh_id, NULL, &buttonThFunc, NULL);
-	return 1;
+	
+	return 0;
 }
 
 int buttonExit(void)

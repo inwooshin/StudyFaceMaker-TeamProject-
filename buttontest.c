@@ -37,12 +37,7 @@ int main(int argc, char *argv[])
 		if(B.type == EV_KEY){
 			switch(B.keyInput)
 			{
-			case KEY_HOME: ledOnOff(0x00,1);
-			ledOnOff(0x01,1); 					
-			ledOnOff(0x02,1); 					
-			ledOnOff(0x04,1); 					
-			ledOnOff(0x08,1); 					
-			ledOnOff(0x0F,1); 					
+			case KEY_HOME: text("");				
 			break;
 			case KEY_BACK: ledOnOff(0x00,0); break;
 			case KEY_SEARCH: ledOnOff(0x01,1); break;
@@ -53,7 +48,6 @@ int main(int argc, char *argv[])
 			if ( B.pressed ) printf("pressed\n");
 			else printf("released\n");
 		}
-		else ;
 		
 	}
 	

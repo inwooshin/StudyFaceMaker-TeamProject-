@@ -33,11 +33,7 @@ int ledOnOff (int ledNum, int onOff){
 
 int ledLibInit(void){
 	fd=open("/dev/periled", O_WRONLY);
-		if ( fd < 0 )
-	{
-	perror("driver (//dev//cnled) open error.\n");
-	return 1;
-	}
+	
 	ledValue = 0;
 
 	return fd;

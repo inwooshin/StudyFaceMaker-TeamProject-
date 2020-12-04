@@ -9,4 +9,4 @@ int pwmSetPercent(int percent, int ledColor);
 int pwmStartAll(void);
 int pwmLedInit(void);
 
-#endif _COLOR_LED_DRV_H_
+#endif //COLOR_LED_DRV_H_
