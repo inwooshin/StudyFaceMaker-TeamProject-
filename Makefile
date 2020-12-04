@@ -3,9 +3,10 @@ all: project
 project : libMyPeri.a Embe.c
 	arm-linux-gnueabi-gcc Embe.c  -l MyPeri -L. -o project -lpthread
 	scp ./project ecube@192.168.0.8:/home/ecube
-libMyPeri.a : button.o led.o buzzer.o fnd.o ColorLed.o Temperature.o acc.o textlcd.o
-	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o fnd.o ColorLed.o Temperature.o acc.o textlcd.o
-
+libMyPeri.a : button.o led.o buzzer.o fnd.o ColorLed.o Temperature.o acc.o textlcd.o bitmap.o
+	arm-linux-gnueabi-ar rc libMyPeri.a led.o button.o buzzer.o fnd.o ColorLed.o Temperature.o acc.o textlcd.o bitmap.o
+bitmap.o : bitmap.c bitmap.h
+	arm-linux-gnueabi-gcc -c bitmap.c -o bitmap.o
 textlcd.o : textlcd.c textlcd.h
 	arm-linux-gnueabi-gcc -c textlcd.c -o textlcd.o
 

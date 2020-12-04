@@ -51,7 +51,7 @@ int error(int argc, char** argv){
 int fnd(int num, char mode){
 	
 	if (mode == MODE_STATIC_DIS ){
-	fndDisp(num , 0);
+	fndDisp(num , 0b1010);
 	}
 	
 	else if(mode == MODE_TIME_DIS ){
@@ -84,6 +84,8 @@ int fnd(int num, char mode){
 	}
 	return 0;
 }
+
+
 
 int fndDisp(int num , int dotflag) {
 	int fd;

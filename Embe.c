@@ -26,7 +26,14 @@
 #include "Temperature.h"
 //등등 헤더파일 설정해줘야함
 
-int i = 0;
+typedef struct{
+	int hour;
+	int min ;
+	int sec ;
+} hourAndMinute;
+
+hourAndMinute a[10];
+int i = 0 , countOut = 0, goalOut = 0, all = 1000000, downOut = 0;
 int allStudy = 10;
 int msgID; // 공부시간을 저장할 변수
 char allStudyToChar[100];
@@ -34,7 +41,8 @@ BUTTON_MSG_T B;
 
 int countup() 
 {
-	/*
+	
+	
    while (1) {
       //textlcd에 버튼 어떤거 눌렀을때 어떻게 진행되는지 출력 해야댐
       //카운트업 시작, 카운트업 일시중지, 카운트 종료
@@ -59,74 +67,111 @@ int countup()
          ;// timer 함수로 복귀
       
    }
-   */
    
    return 0;
 }
 
 int countdown() 
 {
-	/*
-   while (1) 
-   {
-      //textlcd에 버튼 어떤거 눌렀을때 어떻게 진행되는지 출력 해야댐
-      //시간설정, start
-      switch (i) {
+	text("COUNT DOWN", "");
+	
+	int light = 0;
+	int on = 0;
+	countOut = 0;
+	
+     while(1){
+		 if(light){ pwmSetPercent(0,0);
+				pwmSetPercent(0,1);
+				pwmSetPercent(0,2);
+				light = 0;
+		}
+		 if(on){
+		 a[i].sec -= 1;
+		 if(a[i].sec < 0) {a[i].sec = 59; a[i].min -= 1;}
+		 if(a[i].min < 0) {a[i].min = 59; a[i].hour -= 1;}
+		  
+		all = 1000000 + a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
+		fnd(all, MODE_STATIC_DIS);
+		sleep(1);
+		
+		}
+		
+		int returnValue = 0;
+		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, IPC_NOWAIT);
+		
+		if(B.type == EV_KEY){
+			
+			if ( B.pressed ) {
+				light = 1;
+				switch(B.keyInput)
+			{
+			case KEY_HOME: 
+				if(all > 1000000) on ^= 1; if(on) text("COUNT DOWN", "play");	
+				else text("COUNT DOWN" , "stop");
+			 break;
+			case KEY_BACK: 	break;
+			case KEY_SEARCH:  break;
+			case KEY_MENU:  break;
+			case KEY_VOLUMEUP:  break;
+			case KEY_VOLUMEDOWN: countOut = 1; return 0; break;
+			}
+				}
+		}
+		
+		if(all == 1000000){
+			on = 0;
+			
+			text("COUNT DOWN", "         End..!!");
+	
 
-      case 1://1은 예시고 시간설정 버튼 클릭시
-            //버튼클릭으로 시간을 설정하고 전역변수로 저장
-         break;//종료 후 다시 메뉴로 나가기
-
-      case 2: //2는 예시고 start 버튼 클릭시
-            if (allStudy == 0) // 전역변수가 저장되있지 않을 시
-               ;//저장되있는 시간이 없다고 오류띄우고 break
-
-            //설정된 시간으로 카운트 다운 시작
-            //이때 led로 시간/8 해서 가시적으로 볼수있게 설정해줘야댐
-            //정상적으로 카운트다운 끝나면 전역변수에 저장하고 부저울리면서 종료 후 메뉴로 돌아가기
-            if (i == 3)//3은 예시고 stop 버튼 클릭시
-            {
-               ;//카운트다운 일시정지
-               if (i == 2) //2는 예시고  start 버튼 클릭시
-                  ;//다시 카운트다운 시작
-               if (i == 3) //3은 예시고  stop 버튼 클릭시
-                  ;//세그먼트시간을 초기화하고 break 후 메뉴로 복귀
-            }
-         break;
-         
-      }
-      if (i == 3) //3은 예시고 종료버튼 클릭시
-         ;// timer 함수로 복귀
-   }
-   */
-   
+			for(int i = 0 ; i < 5 ; i++){	
+				pwmSetPercent(0,0);
+				pwmSetPercent(0,1);
+				pwmSetPercent(0,2);
+				usleep(500000);
+				pwmSetPercent(0,0);
+				pwmSetPercent(100,1);
+				pwmSetPercent(100,2);
+				sleep(1);
+			}
+			
+			all = 0;
+		}
+	}
+		
    return 0;
+   
 }
 
 int timer() //시간메뉴설정 
 {
-   //textlcd에 메뉴출력 해야댐
+	//tft로 메뉴구현
     //1.카운트업 2.카운트다운 3.현재시간
-    text("1. count up","2. count down 3.nod");
+    
+	text("Timer Menu","");
 
-	/*
-   while (1) {
-      switch (i)
-      {
-      case 1:
-         countup();
-         break;
-      case 2:
-         countdown();
-         break;
-      case 3:
-         //현재시간은 따른함수쓰지말고 걍 이 안에서 프린트 하면 되지 않을까..?
-         break;
-      }
-      if (i==4) //4는 예시고 종료버튼 받으면 빠져나가게하기
-         break;
-   }
-   */
+	countOut = 0; 
+
+	while(1){
+		if(countOut){countOut = 0; text("Timer Menu","");}
+		
+		int returnValue = 0;
+		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, 0);
+		
+		if(B.type == EV_KEY){
+			if ( B.pressed ){
+			switch(B.keyInput)
+			{
+			case KEY_HOME: countup();	break;
+			case KEY_BACK: countdown(); break;
+			case KEY_SEARCH:  
+				fnd(0, MODE_TIME_DIS);
+				break;
+			case KEY_VOLUMEDOWN: countOut = 1; return 0; break;
+			}
+			}
+		}
+	}
 
 	return 0;
 }
@@ -155,27 +200,54 @@ int weekstudy()
 
 int goalstudy()
 {   
+	text("Goal","Please set time");
+	all = 0 ;
 	
-	text("3","goalstudy");
+	a[i].hour =0;
+	a[i].min = 0;
+	a[i].sec = 0;
 	
-	/*
-   while (1) {
-      //textlcd에 메뉴출력 해야댐
-      //1.목표시간설정 2.목표시간달성여부
-      switch (i) 
-      {
-      case 1:// 1은 예시고 목표시간설정 버튼 클릭시
-            //버튼을 활용해 목표시간을 설정후 전역변수에 저장
-         break;
-      case 2: //2는 예시고 목표시간 달성여부 버튼 클릭시
-            //목표시간 변수와 현재공부시간 변수를 동시에 출력
-         break;
-      }
+  while(1){
+	
+		int returnValue = 0;
+		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, 0);
+		
+		if(B.type == EV_KEY){
+			
+			if ( B.pressed ) {
+				switch(B.keyInput)
+			{
+			case KEY_HOME: a[i].hour++; 
+			if(a[i].hour > 59) 
+				a[i].hour = 0;
+			all = 1000000 + a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
+			fnd(all,MODE_STATIC_DIS); break;
+			case KEY_BACK: if(a[i].hour > 0)	a[i].hour--; 
+				else break;
+				all = 1000000 + a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
+				fnd(all,MODE_STATIC_DIS);	break;
+			case KEY_SEARCH: a[i].min++; 
+				if(a[i].min > 59) 
+					a[i].min = 0;
+			all = 1000000 + a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
+			fnd(all,MODE_STATIC_DIS); break;
+			case KEY_MENU: if(a[i].min > 0)	a[i].min--; 
+				all = 1000000 +a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
+			fnd(all,MODE_STATIC_DIS); break;
+			case KEY_VOLUMEUP: 
+			a[i].sec++;
+			if(a[i].sec > 59) a[i].sec = 0;
+			all = 1000000 +a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
+			fnd(all,MODE_STATIC_DIS);
+			 break;
+			case KEY_VOLUMEDOWN: countOut = 1; return 0; break;
+			}
+				}
+		}
+		
+	}
 
-      if (i == 4)//4는 예시고 stop 버튼 받으면
-            ;//메인함수로 복귀
-   }
-   */
+   
    
    return 0;
 }
@@ -187,9 +259,12 @@ int setInit(void){
 	buttonInit();
    
    text("Embedded System", "               ");
-   sleep(2);
+   //sleep(2);
    text("60161818 SIW", "60162241 KHM");
-   sleep(2);
+   //sleep(2);
+	
+	fnd(000000,MODE_STATIC_DIS );
+	
 	
 	int ondo = 0;
    ondo = getTem();
@@ -212,25 +287,38 @@ int main(int argc, char* argv[]) {
 	
 	
 	//tft로 메뉴출력
-	
+	text("main menu", "");
 	buttonStart();
    
+	int get = 1;
+	while(get > 0){
+		get = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
+		};
+   
 	while(1){
+		
+		if(countOut){countOut = 0; text("main menu", "");}
 	
 		int returnValue = 0;
 		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, 0);
 		
 		if(B.type == EV_KEY){
+			if ( B.pressed ){
 			switch(B.keyInput)
 			{
+			case KEY_VOLUMEDOWN: 
+			text("program off..", "");
+			 exit(0);
+			break;
 			case KEY_HOME: timer();	break;
 			case KEY_BACK: daystudy(); break;
 			case KEY_SEARCH:  weekstudy(); break;
 			case KEY_MENU: goalstudy(); break;
 			case KEY_VOLUMEUP:  break;
-			case KEY_VOLUMEDOWN: text("program off..", ""); exit(0); break;
 			}
-			if ( B.pressed ) 
+		}
+			//if ( B.pressed ) printf("pressed\n");
+			//else printf("released\n");
 		}
 		
 	}
