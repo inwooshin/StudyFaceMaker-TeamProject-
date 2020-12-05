@@ -48,7 +48,7 @@ int ledLibExit(void)
 	return 0;
 }
 
-int ledread(const char* data){
+int ledread(const char data[]){
 	pdata = strtol(data,NULL,16); //String을 16진수로 가정하고 integer형으로 변환
 	printf("wrate data :0x%X\n", pdata);
 	

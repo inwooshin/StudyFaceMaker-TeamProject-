@@ -14,6 +14,7 @@
 #include <sys/ioctl.h> // for ioctl
 #include <sys/msg.h>
 #include <pthread.h>
+#include <linux/fb.h>
 
 
 #include "led.h"
@@ -24,6 +25,7 @@
 #include "textlcd.h"
 #include "ColorLed.h"
 #include "Temperature.h"
+#include "bitmap.h"
 //등등 헤더파일 설정해줘야함
 
 typedef struct{
@@ -32,57 +34,99 @@ typedef struct{
 	int sec ;
 } hourAndMinute;
 
-hourAndMinute a[10];
-int i = 0 , countOut = 0, goalOut = 0, all = 1000000, downOut = 0;
+hourAndMinute a[10],up;
+int i = 0 , countOut = 0, goalOut = 0, all = 1000000, downOut = 0, first = 1, upAll;
 int allStudy = 10;
 int msgID; // 공부시간을 저장할 변수
 char allStudyToChar[100];
 BUTTON_MSG_T B;
 
+int goalstudy(void);
+
 int countup() 
 {
+	int on = 0;
+	int returnValue;
+	
+	text("COUNT UP","");
+	bitmainfunc("countup.bmp");
 	
 	
-   while (1) {
-      //textlcd에 버튼 어떤거 눌렀을때 어떻게 진행되는지 출력 해야댐
-      //카운트업 시작, 카운트업 일시중지, 카운트 종료
-      if (i == 1) //1은 예시고 카운트업 시작 버튼을 눌렀을때 카운트 업이 시작되야됨
-      {
-         switch (i) 
-         {
-         case 2: //2는 예시고 카운트일시정지 버튼을 눌렀을때
-               //카운트가 일시정지되야됨
-            break;
-         case 1: //1은 예시고 카운트 시작 버튼을 눌렀을때
-                //다시 카운트 시작
-               if (i == 3) //3은 예시고 카운트 종료를 눌렀을때
-                  ;//카운트를 종료하고 timer() 함수 호출
-            break;
-          case 3: //3은 예시고 카운트 종료를 눌렀을때
-               ;//카운트를 종료하고 timer() 함수 호출
-            break;
-         }
-      }
-      else (i == 3) //3은 예시고 종료버튼 클릭시
-         ;// timer 함수로 복귀
-      
-   }
+  while(1){
+	  if(on){
+		  if(first){
+			first = 0;
+			up.hour = 0;
+			up.min = 0;
+			up.sec = 0;
+			  }
+		  up.sec += 1;
+		  if(up.sec > 59){ up.min += 1; up.sec = 0;}
+		  if(up.min > 59){ up.hour += 1; up.min = 0;}
+		  
+		  upAll = 1000000 + up.hour * 10000 + up.min * 100 + up.sec;
+		  fnd(upAll,MODE_STATIC_DIS);
+		  
+		  returnValue = 1;
+		  while(returnValue > 0) 
+			returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
+		  sleep(1);
+		  }
+	
+		returnValue = 0;
+		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
+		
+		if(B.type == EV_KEY){
+			bitmainfunc("countup.bmp");
+			if ( B.pressed ) {
+				switch(B.keyInput)
+			{
+			case KEY_HOME:
+				on ^= 1; if(on) text("COUNT UP", "play");	
+				else text("COUNT UP" , "stop");  break;
+			case KEY_BACK:if(!on){ first = 1; text("COUNT UP","reset");
+				fnd(upAll,MODE_STATIC_DIS); }
+				else text("COUNT UP","click after stop");
+				break;
+			case KEY_SEARCH:  break;
+			case KEY_MENU:  break;
+			case KEY_VOLUMEUP:  break;
+			case KEY_VOLUMEDOWN:
+			bitmainfunc("timer.bmp");
+			text("Timer Menu",""); return 0; break;
+			}
+			}
+		}
+		
+	}
    
    return 0;
 }
 
 int countdown() 
 {
-	text("COUNT DOWN", "");
+	goalstudy();
 	
+	double setSec = a[i].hour * 3600 + a[i].min * 60 + a[i].sec;
+	double own = setSec;
+	
+	text("COUNT DOWN", "");
+	bitmainfunc("countdown2.bmp");
+	
+	int bit = 0x01;
 	int light = 0;
 	int on = 0;
+	int once = 0;
+	int returnValue;
+	int percent;
+	int j = 7;
 	countOut = 0;
 	
      while(1){
 		 if(light){ pwmSetPercent(0,0);
 				pwmSetPercent(0,1);
 				pwmSetPercent(0,2);
+				ledread("0x00");
 				light = 0;
 		}
 		 if(on){
@@ -92,17 +136,38 @@ int countdown()
 		  
 		all = 1000000 + a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
 		fnd(all, MODE_STATIC_DIS);
+		while(returnValue > 0) 
+			returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
+		 
 		sleep(1);
 		
 		}
 		
-		int returnValue = 0;
+		double setSec = a[i].hour * 3600 + a[i].min * 60 + a[i].sec;
+		percent = (setSec / own) / 0.125;
+		
+		if(percent == j){ 
+			char toString[4];
+			if(j == 7) ledread("0x01");
+			else if(j == 6) ledread("0x03");
+			else if(j == 5) ledread("0x07");
+			else if(j == 4) ledread("0x0F");
+			else if(j == 3) ledread("0x1F");
+			else if(j == 2) ledread("0x3F");
+			else if(j == 1) ledread("0x7F");
+			else ledread("0xFF");
+			
+			j--;
+			
+		}
+		
+		returnValue = 0;
 		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, IPC_NOWAIT);
 		
 		if(B.type == EV_KEY){
-			
 			if ( B.pressed ) {
 				light = 1;
+				bitmainfunc("countdown2.bmp");
 				switch(B.keyInput)
 			{
 			case KEY_HOME: 
@@ -113,13 +178,22 @@ int countdown()
 			case KEY_SEARCH:  break;
 			case KEY_MENU:  break;
 			case KEY_VOLUMEUP:  break;
-			case KEY_VOLUMEDOWN: countOut = 1; return 0; break;
+			case KEY_VOLUMEDOWN: 
+			bitmainfunc("timer.bmp");
+			text("Timer Menu","");
+			pwmSetPercent(0,0);
+			pwmSetPercent(0,1);
+			pwmSetPercent(0,2);
+			countOut = 1;
+			ledread("0x00");
+			 return 0; break;
 			}
 				}
 		}
 		
 		if(all == 1000000){
 			on = 0;
+			bitmainfunc("goal.bmp");
 			
 			text("COUNT DOWN", "         End..!!");
 	
@@ -145,12 +219,13 @@ int countdown()
 
 int timer() //시간메뉴설정 
 {
+	bitmainfunc("timer.bmp");
 	//tft로 메뉴구현
     //1.카운트업 2.카운트다운 3.현재시간
     
 	text("Timer Menu","");
 
-	countOut = 0; 
+	countOut = 0;
 
 	while(1){
 		if(countOut){countOut = 0; text("Timer Menu","");}
@@ -160,6 +235,7 @@ int timer() //시간메뉴설정
 		
 		if(B.type == EV_KEY){
 			if ( B.pressed ){
+			bitmainfunc("timer.bmp");
 			switch(B.keyInput)
 			{
 			case KEY_HOME: countup();	break;
@@ -167,7 +243,12 @@ int timer() //시간메뉴설정
 			case KEY_SEARCH:  
 				fnd(0, MODE_TIME_DIS);
 				break;
-			case KEY_VOLUMEDOWN: countOut = 1; return 0; break;
+			case KEY_VOLUMEDOWN: 
+			
+			countOut = 1;
+			bitmainfunc("MainMenu.bmp");
+			text("main menu", "");
+			 return 0; break;
 			}
 			}
 		}
@@ -181,6 +262,7 @@ int daystudy() //일일 학습량 확인
 	
 	
 	text("1","daystudy");
+	bitmainfunc("daily.bmp");
    //전역변수에 들어가있는 시간 출력
    //4는 예시고 stop 버튼 받으면
    //메인함수로 복귀
@@ -190,6 +272,7 @@ int daystudy() //일일 학습량 확인
 int weekstudy()
 {
 	text("2","weekstudy");
+	bitmainfunc("weekly.bmp");
    //주간총 누적시간을 계산하고 새로운 전역변수에 저장해야댐
    //전역변수에 들어있는 시간 출력
    //4는 예시고 stop 버튼 받으면
@@ -201,6 +284,7 @@ int weekstudy()
 int goalstudy()
 {   
 	text("Goal","Please set time");
+	bitmainfunc("countdown.bmp");
 	all = 0 ;
 	
 	a[i].hour =0;
@@ -215,6 +299,7 @@ int goalstudy()
 		if(B.type == EV_KEY){
 			
 			if ( B.pressed ) {
+				bitmainfunc("countdown.bmp");
 				switch(B.keyInput)
 			{
 			case KEY_HOME: a[i].hour++; 
@@ -240,7 +325,10 @@ int goalstudy()
 			all = 1000000 +a[i].hour * 10000 + a[i].min * 100 + a[i].sec;
 			fnd(all,MODE_STATIC_DIS);
 			 break;
-			case KEY_VOLUMEDOWN: countOut = 1; return 0; break;
+			case KEY_VOLUMEDOWN:
+			bitmainfunc("MainMenu.bmp");
+			text("main menu", "");
+			 countOut = 1; return 0; break;
 			}
 				}
 		}
@@ -253,16 +341,20 @@ int goalstudy()
 }
 
 int setInit(void){
+	
+	bitmainfunc("start.bmp");
+	
     pwmLedInit();
 	ledLibInit();
 	buzzerInit();
 	buttonInit();
    
    text("Embedded System", "               ");
-   //sleep(2);
+   sleep(2);
    text("60161818 SIW", "60162241 KHM");
-   //sleep(2);
+   sleep(2);
 	
+	ledread("0x00");
 	fnd(000000,MODE_STATIC_DIS );
 	
 	
@@ -282,9 +374,9 @@ int setInit(void){
 
 int main(int argc, char* argv[]) {
    
-   
 	setInit();
 	
+	bitmainfunc("MainMenu.bmp");
 	
 	//tft로 메뉴출력
 	text("main menu", "");
@@ -304,16 +396,18 @@ int main(int argc, char* argv[]) {
 		
 		if(B.type == EV_KEY){
 			if ( B.pressed ){
+			bitmainfunc("MainMenu.bmp");
 			switch(B.keyInput)
 			{
 			case KEY_VOLUMEDOWN: 
 			text("program off..", "");
 			 exit(0);
 			break;
-			case KEY_HOME: timer();	break;
+			case KEY_HOME:
+			 timer();	break;
 			case KEY_BACK: daystudy(); break;
 			case KEY_SEARCH:  weekstudy(); break;
-			case KEY_MENU: goalstudy(); break;
+			case KEY_MENU: break;
 			case KEY_VOLUMEUP:  break;
 			}
 		}
