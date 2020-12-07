@@ -58,16 +58,17 @@ int main(int argc, char* argv[]) {
 			bitmainfunc("MainMenu.bmp");
 			switch(B.keyInput)
 			{
-			case KEY_VOLUMEDOWN: 
-			text("program off..", "");
-			 exit(0);
-			break;
 			case KEY_HOME:
 			 timer();	break;
 			case KEY_BACK: daystudy(); break;
 			case KEY_SEARCH:  weekstudy(); break;
 			case KEY_MENU: break;
 			case KEY_VOLUMEUP:  break;
+			case KEY_VOLUMEDOWN: 
+			bitmainfunc("exit.bmp");
+			text("program off..", "");
+			 exit(0);
+			break;
 			}
 		}
 			//if ( B.pressed ) printf("pressed\n");

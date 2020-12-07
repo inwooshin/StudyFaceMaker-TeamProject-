@@ -15,6 +15,11 @@ char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결�
 char FrequencyPath[200];
 char EnablePath[200];
 int fdFre, fdEna;
+const int musicScale[MAX_SCALE_STEP] =
+{
+262, /*do*/ 294,330,349,392,440,494, /* si */ 523
+};
+
 
 int buzzerInit(void){
 	

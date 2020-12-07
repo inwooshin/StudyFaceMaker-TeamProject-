@@ -131,10 +131,6 @@ int countdown(void)
 		fnd(all, MODE_STATIC_DIS);
 		while(returnValue > 0) 
 			returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
-		 
-		sleep(1);
-		
-		}
 		
 		double setSec = a[i].hour * 3600 + a[i].min * 60 + a[i].sec;
 		percent = (setSec / own) / 0.125;
@@ -152,6 +148,10 @@ int countdown(void)
 			
 			j--;
 			
+		} 
+		 
+		sleep(1);
+		
 		}
 		
 		returnValue = 0;
@@ -186,6 +186,16 @@ int countdown(void)
 		
 		if(all == 1000000){
 			on = 0;
+			
+			buzzerPlaySong(musicScale[0]);
+			usleep(500000);
+			buzzerPlaySong(musicScale[2]);
+			usleep(500000);
+			buzzerPlaySong(musicScale[4]);
+			usleep(500000);
+			buzzerPlaySong(musicScale[7]);
+			usleep(500000);
+			
 			bitmainfunc("goal.bmp");
 			
 			text("COUNT DOWN", "         End..!!");
@@ -292,7 +302,6 @@ int goalstudy(void)
 		if(B.type == EV_KEY){
 			
 			if ( B.pressed ) {
-				bitmainfunc("countdown.bmp");
 				switch(B.keyInput)
 			{
 			case KEY_HOME: a[i].hour++; 
@@ -319,8 +328,6 @@ int goalstudy(void)
 			fnd(all,MODE_STATIC_DIS);
 			 break;
 			case KEY_VOLUMEDOWN:
-			bitmainfunc("MainMenu.bmp");
-			text("main menu", "");
 			 countOut = 1; return 0; break;
 			}
 				}
