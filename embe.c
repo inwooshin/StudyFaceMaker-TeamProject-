@@ -363,9 +363,14 @@ int setInit(void){
    char temperature[20];
    sprintf(temperature, "temperature : %d", ondo);
    
-   if(ondo < 20)	text(temperature, "Cold to study");
-   else if(ondo >= 20 && ondo < 26) text(temperature, "Enough to study!");
-   else text(temperature, "Hot to study..!");
+   if(ondo < 20) 
+    { bitmainfunc("cold.bmp"); text(temperature, "Cold to study");}
+   else if(ondo >= 20 && ondo < 26)
+    {bitmainfunc("nice.bmp"); text(temperature, "Nice to study!");}
+   else 
+    {bitmainfunc("hot.bmp"); text(temperature, "Hot to study..!");}
+	
+	sleep(2);
 	
 	return 0;
 }
