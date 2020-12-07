@@ -4,7 +4,10 @@
 #include <fcntl.h>      // for O_RDWR
 #include <sys/ioctl.h>  // for ioctl
 #include <sys/mman.h>
-#include <linux/fb.h>   // for fb_var_screeninfo, FBIOGET_VSCREENINFO
+#include <linux/fb.h> 
+//#include "../libfbdev/libfbdev.h"
+//#include "../libjpeg/jpeglib.h"
+#include <sys/kd.h>  // for fb_var_screeninfo, FBIOGET_VSCREENINFO
 #include "bitmap.h"
 
 #define FBDEV_FILE  "/dev/fb0"
@@ -171,6 +174,10 @@ int bitmainfunc (char *argv)
             *ptr++  =   bmpdata[coor_x + coor_y*cols];
         }
     }
+
+   int conFD = open ("/dev/tty0", O_RDWR);
+   ioctl(conFD, KDSETMODE, KD_GRAPHICS);
+   close (conFD);
 
     munmap( pfbmap, mem_size);
     close( fbfd);
