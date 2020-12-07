@@ -1,6 +1,3 @@
-
-
-
 #include <getopt.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
@@ -138,10 +135,6 @@ int countdown()
 		fnd(all, MODE_STATIC_DIS);
 		while(returnValue > 0) 
 			returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
-		 
-		sleep(1);
-		
-		}
 		
 		double setSec = a[i].hour * 3600 + a[i].min * 60 + a[i].sec;
 		percent = (setSec / own) / 0.125;
@@ -159,6 +152,10 @@ int countdown()
 			
 			j--;
 			
+		}
+		 
+		sleep(1);
+		
 		}
 		
 		returnValue = 0;

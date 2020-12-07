@@ -9,7 +9,7 @@ int 	accInit(void);
 int	magInit(void);
 int	gyroInit(void);
 	
-int*	getAcc(void);
+int* getAcc(void);
 int	getMag(void);
 int	getGyro(void);
 
