@@ -25,7 +25,6 @@
 #include "bitmap.h"
 #include "embe.h"
 
-hourAndMinute a[10],up;
 int countOut;
 int msgID; // 공부시간을 저장할 변수
 char allStudyToChar[100];
@@ -33,33 +32,26 @@ BUTTON_MSG_T B;
 
 int main(int argc, char* argv[]) {
    
-	setInit(); //
+	setInit(); //각종 기기들을 키고 log.txt 파일을 오픈하며 초기 설정을 해준다.
 	
-	bitmainfunc("MainMenu.bmp");
+	bitmainfunc("MainMenu.bmp"); //메인 메뉴 사진을 띄운다.
 	
-	//tft로 메뉴출력
-	text("main menu", "");
-	buttonStart();
-   
-	int get = 1;
-	while(get > 0){
-		get = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
-		};
+	text("Main Menu", "");
+	buttonStart();	
    
 	while(1){
 		
-		if(countOut){countOut = 0; text("Main Menu", "");}
 	
 		int returnValue = 0;
 		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, 0);
+			//버튼의 입력을 받아온다.
 		
 		if(B.type == EV_KEY){
-			if ( B.pressed ){
-			bitmainfunc("MainMenu.bmp");
+			if ( B.pressed ){ //버튼이 눌렸을 경우
 			switch(B.keyInput)
 			{
-			case KEY_HOME:
-			 timer();	break;
+			case KEY_HOME: 
+			 timer();	break; 
 			case KEY_BACK: daystudy(); break;
 			case KEY_SEARCH:  weekstudy(); break;
 			case KEY_MENU: break;
@@ -67,12 +59,11 @@ int main(int argc, char* argv[]) {
 			case KEY_VOLUMEDOWN: 
 			bitmainfunc("exit.bmp");
 			text("program off..", "");
-			 exit(0);
+			setExit(); //종료 시 열어놓은 파일들을 전부 close 하고 종료한다.
+			exit(0);
 			break;
 			}
 		}
-			//if ( B.pressed ) printf("pressed\n");
-			//else printf("released\n");
 		}
 		
 	}
