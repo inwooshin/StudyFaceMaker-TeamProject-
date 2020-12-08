@@ -33,7 +33,7 @@ BUTTON_MSG_T B;
 
 int main(int argc, char* argv[]) {
    
-	setInit();
+	setInit(); //
 	
 	bitmainfunc("MainMenu.bmp");
 	
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
    
 	while(1){
 		
-		if(countOut){countOut = 0; text("main menu", "");}
+		if(countOut){countOut = 0; text("Main Menu", "");}
 	
 		int returnValue = 0;
 		returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0, 0);

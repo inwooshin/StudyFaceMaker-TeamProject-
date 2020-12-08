@@ -14,40 +14,6 @@ char DataDot[FND_DATA_BUFF_LEN]; //숫자 0 or 1
 char DataValid[FND_DATA_BUFF_LEN]; //숫자 0 or 1
 }stFndWriteForm,*pStFndWriteForm;
 
-int error(int argc, char** argv){
-	int number;
-	if( argc < 2 || argc > 3){
-		printf("error!\n");
-		printf("please enter the argument in raw\n");
-		printf("ex) ./fndtest s 100000\n");
-		printf("ex) ./fndtest t\n");
-		printf("ex) ./fndtest c 100000\n");
-		return -1;
-	}
-	
-	if(*argv[1] != MODE_STATIC_DIS && *argv[1] != MODE_TIME_DIS && *argv[1] != MODE_COUNT_DIS){
-		printf("error!\n");
-		printf("s : string\n");
-		printf("t : time\n");
-		printf("c : counter\n");
-		return -1;
-	}
-	
-	if(*argv[1] == MODE_STATIC_DIS || *argv[1] == MODE_COUNT_DIS){
-		if(argc != 3){
-			printf("error!\n");
-			printf("please enter the third parameter\n");
-			return -1;
-		}
-		number = atoi(argv[2]);
-	}
-	else if(*argv[1] == MODE_TIME_DIS){
-		number = 0;
-	}
-	
-	return number;
-}
-
 int fnd(int num, char mode){
 	
 	if (mode == MODE_STATIC_DIS ){

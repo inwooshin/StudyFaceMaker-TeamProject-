@@ -7,7 +7,6 @@
 #define MODE_COUNT_DIS 'c'
 
 int fnd(int num, char mode);
-int error(int argc, char** argv);
 int fndDisp(int num , int dotflag);
 
 #endif //FND_DRV_H__

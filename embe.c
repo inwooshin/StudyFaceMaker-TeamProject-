@@ -619,15 +619,15 @@ int setInit(void){
    fp = open("log.txt", O_RDWR | O_CREAT, 0666);
    
    text("Embedded System", "               ");
-   //sleep(2);
+   sleep(1);
    text("60161818 SIW", "60162241 KHM");
-   //sleep(2);
+   sleep(2);
 	
 	ledread("0x00");
 	fnd(000000,MODE_STATIC_DIS );
 	
 	int ondo = 0;
-   ondo = getTem();
+   ondo = getTem() - 5;
    char temperature[20];
    sprintf(temperature, "temperature : %d", ondo);
    
@@ -641,7 +641,7 @@ int setInit(void){
     
 	
 	
-	//sleep(2);
+	sleep(2);
 	
 	return 0;
 }

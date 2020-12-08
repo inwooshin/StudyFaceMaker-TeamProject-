@@ -20,5 +20,4 @@ int goalstudy(void);
 int setInit(void); 
 
 
-
 #endif
