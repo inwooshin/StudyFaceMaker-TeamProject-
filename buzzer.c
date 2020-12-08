@@ -46,7 +46,6 @@ int buzzerInit(void){
 	
 	fdEna=open(EnablePath,O_WRONLY);
 	fdFre=open(FrequencyPath,O_WRONLY);
-	write(fdEna, &"1", 1);
 	write(fdEna, &"0", 1);
 	
 	return ifNotFound;
@@ -55,6 +54,7 @@ int buzzerInit(void){
 
 int buzzerPlaySong(int scale){
 	
+	write(fdEna, &"1", 1);
 	dprintf(fdFre, "%d", scale);
 	
 	return 0;

@@ -9,7 +9,6 @@ bitmap.o : bitmap.c bitmap.h
 	arm-linux-gnueabi-gcc -c bitmap.c -o bitmap.o
 textlcd.o : textlcd.c textlcd.h
 	arm-linux-gnueabi-gcc -c textlcd.c -o textlcd.o
-
 fnd.o : fnd.c fnd.h
 	arm-linux-gnueabi-gcc -c fnd.c -o fnd.o
 buzzer.o : buzzer.h buzzer.c
@@ -24,7 +23,7 @@ Temperature.o: Temperature.h Temperature.c
 	arm-linux-gnueabi-gcc -c Temperature.c -o Temperature.o
 acc.o: acc.h accelMagGyro.c
 	arm-linux-gnueabi-gcc -c accelMagGyro.c -o acc.o
-embe.o: embe.h embe.o
+embe.o: embe.h embe.c
 	arm-linux-gnueabi-gcc -c embe.c -o embe.o
 
 clear : 

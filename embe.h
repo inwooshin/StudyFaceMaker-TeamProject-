@@ -2,6 +2,9 @@
 #define _embe_drv_
 
 typedef struct{
+	int year;
+	int month;
+	int day;
 	int hour;
 	int min ;
 	int sec ;
