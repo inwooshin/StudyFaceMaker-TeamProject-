@@ -66,7 +66,7 @@
 ## 실행 영상
  - 카운트 다운 기능
 
-<img  width = "400" src = "https://user-images.githubusercontent.com/59462895/104885135-dc48c100-59aa-11eb-9b29-380a445c5886.gif"></img>
+<img  width = "400" src = "https://user-images.githubusercontent.com/59462895/104886137-9856bb80-59ac-11eb-8359-6495a78be4e8.gif"></img>
 
  - 카운트 업 기능
 
