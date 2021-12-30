@@ -36,7 +36,7 @@ int firstGoal = 1;	//목표 시간을 설정 시 처음을 구분
 int fp;	//파일을 여러 함수에서 쓸 수 있도록 전역 변수 선언
 int allStudy = 0;	//총 공부량 저장
 int msgID; // 공부시간을 저장할 변수
-double setSec, own;	// 목표 달성 비율에 따른 led 출력을 위한 변수
+double downSec, own;	// 목표 달성 비율에 따른 led 출력을 위한 변수
 BUTTON_MSG_T B;	//버튼 입력 구조체
 
 int goalstudy(void);
@@ -140,8 +140,8 @@ int countdown(void)
 	fnd(all, MODE_STATIC_DIS);	//현재 목표시간 설정
 	
 	char now[20], todayStudy[20];
-	setSec = a.hour * 3600 + a.min * 60 + a.sec;	
-	own = setSec;	//목표시간을 초단위로 총량을 저장 후의 led 비율을 위해
+	downSec = a.hour * 3600 + a.min * 60 + a.sec;	
+	own = downSec;	//목표시간을 초단위로 총량을 저장 후의 led 비율을 위해
 	
 	text("COUNT DOWN", "");
 	bitmainfunc("countdown2.bmp");
@@ -171,8 +171,8 @@ int countdown(void)
 		while(returnValue > 0) 
 			returnValue = msgrcv(msgID, &B, sizeof(unsigned short) * 2 + sizeof(int), 0,IPC_NOWAIT);
 				//쌓여있는 메세지 없앰
-		setSec = a.hour * 3600 + a.min * 60 + a.sec;	//현재 공부한 시간을 초로 변경
-		percent = (8 * setSec) / own;	//처음 목표 설정량과 현재 공부량의 비율을 산정
+		downSec = a.hour * 3600 + a.min * 60 + a.sec;	//현재 공부한 시간을 초로 변경
+		percent = (8 * downSec) / own;	//처음 목표 설정량과 현재 공부량의 비율을 산정
 		
 			if(percent == 1) ledread("0x01");
 			else if(percent == 2) ledread("0x03");
