@@ -174,14 +174,14 @@ int countdown(void)
 		downSec = a.hour * 3600 + a.min * 60 + a.sec;	//현재 공부한 시간을 초로 변경
 		percent = (8 * downSec) / own;	//처음 목표 설정량과 현재 공부량의 비율을 산정
 		
-			if(percent == 1) ledread("0x01");
-			else if(percent == 2) ledread("0x03");
-			else if(percent == 3) ledread("0x07");
-			else if(percent == 4) ledread("0x0F");
-			else if(percent == 5) ledread("0x1F");
-			else if(percent == 6) ledread("0x3F");
-			else if(percent == 7) ledread("0x7F");
-			else if(percent == 8) ledread("0xFF");
+			if(percent == 6) ledread("0x01");
+			else if(percent == 5) ledread("0x03");
+			else if(percent == 4) ledread("0x07");
+			else if(percent == 3) ledread("0x0F");
+			else if(percent == 2) ledread("0x1F");
+			else if(percent == 1) ledread("0x3F");
+			else if(percent == 0) ledread("0x7F");
+			if(all == 1000000) ledread("0xFF");
 			//	1/8 만큼 채워지면 led 하나씩 출력시킴
 		 
 		sleep(1);
