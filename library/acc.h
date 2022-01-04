@@ -5,7 +5,7 @@
 #define MAGNEPATH "/sys/class/misc/FreescaleMagnetometer/"
 #define GYROPATH "/sys/class/misc/FreescaleGyroscope/"
 
-int 	accInit(void);
+int accInit(void);
 int	magInit(void);
 int	gyroInit(void);
 	
