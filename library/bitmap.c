@@ -13,11 +13,9 @@
 #define FBDEV_FILE  "/dev/fb0"
 #define BIT_VALUE_24BIT   24
 
-
-  
 //bitmap start
-void read_bmp(char *filename, char **pDib, char **data, int *cols, int *rows)
-{
+void read_bmp(char *filename, char **pDib, char **data, int *cols, int *rows){
+
     BITMAPFILEHEADER    bmpHeader;
     BITMAPINFOHEADER    *bmpInfoHeader;
     unsigned int    size;
@@ -25,13 +23,15 @@ void read_bmp(char *filename, char **pDib, char **data, int *cols, int *rows)
     int     nread;
     FILE    *fp;
 
-    fp  =  fopen(filename, "rb");
+    //파일을 읽는다.
+    fp = fopen(filename, "rb");
+
     if(fp == NULL) {
         printf("ERROR\n");
         return;
     }
 
-    // identify bmp file
+    // identify bmp file - bmp 파일인지를 확인한다.
     magicNum[0]   =   fgetc(fp);
     magicNum[1]   =   fgetc(fp);
     printf("magicNum : %c%c\n", magicNum[0], magicNum[1]);
@@ -39,14 +39,15 @@ void read_bmp(char *filename, char **pDib, char **data, int *cols, int *rows)
     if(magicNum[0] != 'B' && magicNum[1] != 'M') {
         printf("It's not a bmp file!\n");
         fclose(fp);
+
         return;
     }
-
+    
     nread   =   fread(&bmpHeader.bfSize, 1, sizeof(BITMAPFILEHEADER), fp);
     size    =   bmpHeader.bfSize - sizeof(BITMAPFILEHEADER);
     *pDib   =   (unsigned char *)malloc(size);      // DIB Header(Image Header)
-    fread(*pDib, 1, size, fp);
-    bmpInfoHeader   =   (BITMAPINFOHEADER *)*pDib;
+    fread(*pDib, 1, size, fp); //size 크기만큼 fp 에서 pDib 에 읽어오기
+    bmpInfoHeader   =   (BITMAPINFOHEADER *) *pDib;
 
     printf("nread : %d\n", nread);
     printf("size : %d\n", size);
@@ -56,6 +57,7 @@ void read_bmp(char *filename, char **pDib, char **data, int *cols, int *rows)
     {
         printf("It supports only 24bit bmp!\n");
         fclose(fp);
+        
         return;
     }
 
@@ -90,9 +92,6 @@ int bitmainfunc (char *argv)
     unsigned long   *ptr;
     struct  fb_var_screeninfo fbvar;
     struct  fb_fix_screeninfo fbfix;
-
-
-  
 
     read_bmp(argv, &pData, &data, &cols, &rows);
     printf("Bitmap : cols = %d, rows = %d\n", cols, rows);
