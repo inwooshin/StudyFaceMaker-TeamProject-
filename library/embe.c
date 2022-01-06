@@ -658,7 +658,5 @@ int setExit(void){
 	//열어놓은 파일 전부 종료
 	
 	close(fp);//log 파일도 종료
-	
-	
+		
 }
-

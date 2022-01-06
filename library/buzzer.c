@@ -5,19 +5,21 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
+#include "buzzer.h"
+
 #define MAX_SCALE_STEP 8
 #define BUZZER_BASE_SYS_PATH "/sys/bus/platform/devices/"
 #define BUZZER_FILENAME "peribuzzer"
 #define BUZZER_ENABLE_NAME "enable"
 #define BUZZER_FREQUENCY_NAME "frequency"
-#include "buzzer.h"
+
 char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결정됨
 char FrequencyPath[200];
 char EnablePath[200];
 int fdFre, fdEna;
-const int musicScale[MAX_SCALE_STEP] =
-{
-262, /*do*/ 294,330,349,392,440,494, /* si */ 523
+
+const int musicScale[MAX_SCALE_STEP] ={
+	262, /*do*/ 294,330,349,392,440,494, /* si */ 523
 };
 
 
@@ -40,7 +42,6 @@ int buzzerInit(void){
 	}
 	else return ifNotFound;
 	
-	
 	sprintf(EnablePath,"%s%s",gBuzzerBaseSysDir,BUZZER_ENABLE_NAME);
 	sprintf(FrequencyPath,"%s%s",gBuzzerBaseSysDir,BUZZER_FREQUENCY_NAME);
 	
@@ -60,8 +61,8 @@ int buzzerPlaySong(int scale){
 	return 0;
 }
 
-int buzzerStopSong(void)
-{
+int buzzerStopSong(void){
+
 	write(fdEna, &"0", 1);
 
 	return 0;
