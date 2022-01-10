@@ -5,16 +5,17 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
+#include "buzzer.h"
+
 #define MAX_SCALE_STEP 8
 #define BUZZER_BASE_SYS_PATH "/sys/bus/platform/devices/"
 #define BUZZER_FILENAME "peribuzzer"
 #define BUZZER_ENABLE_NAME "enable"
 #define BUZZER_FREQUENCY_NAME "frequency"
+
 char gBuzzerBaseSysDir[128]; ///sys/bus/platform/devices/peribuzzer.XX 가 결정됨
-#include "buzzer.h"
-const int musicScale[MAX_SCALE_STEP] =
-{
-262, /*do*/ 294,330,349,392,440,494, /* si */ 523
+const int musicScale[MAX_SCALE_STEP] ={
+	262, /*do*/ 294,330,349,392,440,494, /* si */ 523
 };
 
 int main(int argc , char **argv){
@@ -35,16 +36,15 @@ int main(int argc , char **argv){
 	printf("freIndex :%d \n",freIndex);
 	
 	if ( freIndex > MAX_SCALE_STEP-1 ){
-	printf(" <buzzerNo> over range \n");
-	return 1;
+		printf(" <buzzerNo> over range \n");
+		return 1;
 	}
 	
 	buzzerInit();
 	
-	if ( freIndex == -1)
-	{
-	buzzerStopSong();
-	return 0;
+	if ( freIndex == -1){
+		buzzerStopSong();
+		return 0;
 	}
 	
 	buzzerPlaySong(musicScale[freIndex]);
