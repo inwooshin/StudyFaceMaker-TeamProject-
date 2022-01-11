@@ -7,12 +7,11 @@
 #include "fnd.h"
 #define FND_DRIVER_NAME "/dev/perifnd"
 
-typedef struct FNDWriteDataForm_tag
-{
-char DataNumeric[FND_DATA_BUFF_LEN]; //숫자 0-9
-char DataDot[FND_DATA_BUFF_LEN]; //숫자 0 or 1
-char DataValid[FND_DATA_BUFF_LEN]; //숫자 0 or 1
-}stFndWriteForm,*pStFndWriteForm;
+typedef struct FNDWriteDataForm_tag{
+	char DataNumeric[FND_DATA_BUFF_LEN]; //숫자 0-9
+	char DataDot[FND_DATA_BUFF_LEN]; //숫자 0 or 1
+	char DataValid[FND_DATA_BUFF_LEN]; //숫자 0 or 1
+} stFndWriteForm,*pStFndWriteForm;
 
 int fnd(int num, char mode){
 	
