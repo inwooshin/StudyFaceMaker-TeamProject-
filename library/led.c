@@ -18,6 +18,7 @@ unsigned int pdata=0;
 int isWrite;
 
 int ledOnOff (int ledNum, int onOff){
+
 	int isWrite;
 	
 	int i=1;
@@ -32,6 +33,7 @@ int ledOnOff (int ledNum, int onOff){
 }
 
 int ledLibInit(void){
+
 	fd=open("/dev/periled", O_WRONLY);
 	
 	ledValue = 0;
@@ -39,8 +41,8 @@ int ledLibInit(void){
 	return fd;
 }
 
-int ledLibExit(void)
-{
+int ledLibExit(void){
+	
 	ledValue = 0;
 
 	close(fd);
@@ -49,6 +51,7 @@ int ledLibExit(void)
 }
 
 int ledread(const char data[]){
+	
 	pdata = strtol(data,NULL,16); //String을 16진수로 가정하고 integer형으로 변환
 	printf("wrate data :0x%X\n", pdata);
 	
@@ -65,7 +68,7 @@ int ledread(const char data[]){
 	}
 }
 
-int ledStatus(void)
-{
+int ledStatus(void){
+	
 	return ledValue;
 }
