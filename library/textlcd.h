@@ -38,6 +38,6 @@ unsigned char cmd; //
 unsigned char cmdData;
 unsigned char reserved[2];
 char TextData[LINE_NUM][LINE_BUFF_NUM];
-}stTextLCD,*pStTextLCD;
+} stTextLCD, *pStTextLCD;
 
 #endif //TEXTLCD_DRV_H
